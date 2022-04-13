@@ -8,25 +8,25 @@ import java.sql.*;
  *
  */
 public class App {
+    private static Connection connection = null;
+
     private static Connection getDBConnection() {
-        Connection connection = null;
+        Connection conn = null;
         String connectionUrl = "jdbc:mysql://192.168.1.7:3306/DiemDanh";
+        String user = "diemdanhuser";
+        String password = "24061999";
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        try {
-            connection = DriverManager.getConnection(connectionUrl, "", "");
-            if (connection != null) {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            conn = DriverManager.getConnection(connectionUrl, user, password);
+            if (conn != null) {
                 System.out.println("Connected to DB!");
-            }
-        } catch (SQLException e) {
+            } else
+                System.out.println("Failed to connect to DB!");
+        } catch (ClassNotFoundException | SQLException exception) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            exception.printStackTrace();
         }
-        return connection;
+        return conn;
     }
 
     public static void main(String[] args) {
@@ -34,6 +34,6 @@ public class App {
         // jframe.pack();
         // jframe.setVisible(true);
 
-        getDBConnection();
+        connection = getDBConnection();
     }
 }
