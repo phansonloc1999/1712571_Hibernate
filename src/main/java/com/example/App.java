@@ -23,7 +23,6 @@ public class App {
             } else
                 System.out.println("Failed to connect to DB!");
         } catch (ClassNotFoundException | SQLException exception) {
-            // TODO Auto-generated catch block
             exception.printStackTrace();
         }
         return conn;
