@@ -1,4 +1,4 @@
--- DROP DATABASE DiemDanh;
+DROP DATABASE DiemDanh;
 -- DROP USER 'diemdanhuser'@'%';
 
 CREATE DATABASE DiemDanh;
@@ -18,7 +18,9 @@ CREATE TABLE mon_hoc (
 -- DROP TABLE sinh_vien;
 CREATE TABLE sinh_vien (
     mssv MEDIUMINT UNSIGNED NOT NULL,
-	ten_sv VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL, 
+	ten_sv VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+    username VARCHAR(30) NOT NULL,
+    password VARCHAR(30) NOT NULL,
     PRIMARY KEY (mssv)
 );
 
@@ -61,8 +63,8 @@ CREATE TABLE diem_danh_sv (
 INSERT INTO mon_hoc VALUES ('CSC001', 'Lập trình cơ bản');
 INSERT INTO mon_hoc VALUES ('CSC002', 'Lập trình hướng đối tượng');
 
-INSERT INTO sinh_vien VALUES (1712571, 'Phan Sơn Lộc');
-INSERT INTO sinh_vien VALUES (1712572, 'Phan Sơn Phúc');
+INSERT INTO sinh_vien VALUES (1712571, 'Phan Sơn Lộc', '1712571', '1712571');
+INSERT INTO sinh_vien VALUES (1712572, 'Phan Sơn Phúc', '1712572', '1712572');
 
 INSERT INTO thoi_khoa_bieu VALUES (1712571, CURRENT_DATE(), '2022-4-14', 2, CURRENT_TIME(), CURRENT_TIME(), 'E101', 'CSC002');
 INSERT INTO thoi_khoa_bieu VALUES (1712572, CURRENT_DATE(), '2022-4-14', 2, CURRENT_TIME(), CURRENT_TIME(), 'E101', 'CSC002');

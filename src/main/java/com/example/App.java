@@ -29,10 +29,6 @@ public class App {
     }
 
     public static void main(String[] args) {
-        // JFrame jframe = new JFrame();
-        // jframe.pack();
-        // jframe.setVisible(true);
-
         connection = getDBConnection();
     }
 }
