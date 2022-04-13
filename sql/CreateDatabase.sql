@@ -1,7 +1,9 @@
 -- NOTE: Run this script with root/system admin or database administrator account
 CREATE DATABASE DiemDanh;
 CREATE USER 'sinhvien'@'%' IDENTIFIED BY 'sinhvien';
-GRANT ALL ON DiemDanh.* TO 'sinhvien'@'%';
+GRANT SELECT ON DiemDanh.* TO 'sinhvien'@'%';
+CREATE USER 'giaovu'@'%' IDENTIFIED BY 'giaovu';
+GRANT ALL ON DiemDanh.* TO 'giaovu'@'%';
 
 USE DiemDanh;
 
