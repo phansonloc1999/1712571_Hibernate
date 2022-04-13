@@ -13,8 +13,8 @@ public class App {
     private static Connection getDBConnection() {
         Connection conn = null;
         String connectionUrl = "jdbc:mysql://192.168.1.7:3306/DiemDanh";
-        String user = "diemdanhuser";
-        String password = "24061999";
+        String user = "sinhvien";
+        String password = "sinhvien";
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection(connectionUrl, user, password);

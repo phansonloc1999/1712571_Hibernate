@@ -1,9 +1,12 @@
-DROP DATABASE DiemDanh;
--- DROP USER 'diemdanhuser'@'%';
+-- NOTE: Run this script with root/system admin or database administrator account
+
+-- DROP DATABASE DiemDanh;
+-- DROP USER 'sinhvien'@'%';
+-- DROP USER 'giaovu'@'%';
 
 CREATE DATABASE DiemDanh;
--- CREATE USER 'diemdanhuser'@'%' IDENTIFIED BY '24061999';
--- GRANT ALL ON DiemDanh.* TO 'diemdanhuser'@'%';
+-- CREATE USER 'sinhvien'@'%' IDENTIFIED BY 'sinhvien';
+-- GRANT ALL ON DiemDanh.* TO 'sinhvien'@'%';
 
 -- DROP DATABASE DiemDanh;
 
