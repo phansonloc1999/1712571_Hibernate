@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * Hello world!
@@ -61,7 +62,6 @@ public class App {
                         e1.printStackTrace();
                     }
                 } catch (SQLException e2) {
-                    // TODO Auto-generated catch block
                     e2.printStackTrace();
                 }
             }
@@ -156,7 +156,6 @@ public class App {
                         e1.printStackTrace();
                     }
                 } catch (SQLException e2) {
-                    // TODO Auto-generated catch block
                     e2.printStackTrace();
                 }
             }
@@ -180,9 +179,71 @@ public class App {
         jFrame.setVisible(true);
     }
 
+    public static void addSVToMonHoc() {
+        final JFrame jFrame = new JFrame();
+
+        String[] maMHStrings = null;
+        try {
+            Statement stm = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            ResultSet rs = stm.executeQuery("SELECT ma_mh FROM mon_hoc");
+            rs.last();
+            int rowCount = rs.getRow();
+            maMHStrings = new String[rowCount];
+            int i = 0;
+            rs.beforeFirst();
+            while (rs.next()) {
+                maMHStrings[i] = rs.getString(1);
+                i++;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        final JComboBox<String> maMHComboBox = new JComboBox<String>(maMHStrings);
+        maMHComboBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                Statement statement;
+                try {
+
+                    statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+                            ResultSet.CONCUR_READ_ONLY);
+                    ResultSet rs = statement.executeQuery(
+                            "SELECT mssv FROM danh_sach_sv_mh WHERE ma_mh = '"
+                                    + (String) maMHComboBox.getSelectedItem() + "'");
+                    rs.last();
+                    int rowCount = rs.getRow();
+                    rs.beforeFirst();
+                    int i = 0;
+                    String mssvStrings[] = new String[rowCount];
+                    while (rs.next()) {
+                        mssvStrings[i] = String.valueOf(rs.getInt(1));
+                        i++;
+                    }
+
+                    JList mssvList = new JList(mssvStrings);
+                    JScrollPane mssvScrollPane = new JScrollPane(mssvList);
+
+                    jFrame.add(mssvScrollPane);
+                    jFrame.pack();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+
+            }
+        });
+        jFrame.add(maMHComboBox);
+
+        jFrame.setLayout(new BoxLayout(jFrame.getContentPane(), BoxLayout.Y_AXIS));
+        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jFrame.pack();
+        jFrame.setVisible(true);
+    }
+
     public static void main(String[] args) {
         connection = getDBConnection();
-        createMonHoc();
-        createThoiKhoaBieu();
+        // createMonHoc();
+        // createThoiKhoaBieu();
+        addSVToMonHoc();
     }
 }
