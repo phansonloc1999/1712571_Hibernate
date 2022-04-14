@@ -32,8 +32,6 @@ public class App {
 
     private static void createMonHoc() {
         final JFrame jFrame = new JFrame();
-        jFrame.setTitle("Tạo môn học");
-        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JLabel maMHLabel = new JLabel("Mã môn học");
         jFrame.add(maMHLabel);
@@ -81,14 +79,110 @@ public class App {
         jPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         jFrame.add(jPanel);
 
+        jFrame.setTitle("Tạo môn học");
         jFrame.setLayout(new BoxLayout(jFrame.getContentPane(), BoxLayout.Y_AXIS));
         jFrame.pack();
         jFrame.setVisible(true);
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+    private static void createThoiKhoaBieu() {
+        final JFrame jFrame = new JFrame();
+        jFrame.setTitle("Tạo thời khoá biểu");
+        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        JLabel maMHLabel = new JLabel("Mã môn học");
+        jFrame.add(maMHLabel);
+        maMHLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        final JTextField maMHTextField = new JTextField();
+        jFrame.add(maMHTextField);
+
+        JLabel ngayBdLabel = new JLabel("Ngày bắt đầu");
+        jFrame.add(ngayBdLabel);
+        ngayBdLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        final JTextField ngayBdTxtField = new JTextField();
+        jFrame.add(ngayBdTxtField);
+
+        JLabel ngayKtLabel = new JLabel("Ngày kết thúc");
+        jFrame.add(ngayKtLabel);
+        ngayBdLabel.setAlignmentX(Component.TOP_ALIGNMENT);
+        final JTextField ngayKtTxtField = new JTextField();
+        jFrame.add(ngayKtTxtField);
+
+        JLabel thuLabel = new JLabel("Thứ trong tuần");
+        jFrame.add(thuLabel);
+        thuLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        final JTextField thuTxtField = new JTextField();
+        jFrame.add(thuTxtField);
+
+        JLabel gioBdLabel = new JLabel("Giờ bắt đầu");
+        jFrame.add(gioBdLabel);
+        gioBdLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        final JTextField gioBdTxtField = new JTextField();
+        jFrame.add(gioBdTxtField);
+
+        JLabel gioKtLabel = new JLabel("Giờ kết thúc");
+        jFrame.add(gioKtLabel);
+        gioKtLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        final JTextField gioKtTxtField = new JTextField();
+        jFrame.add(gioKtTxtField);
+
+        JLabel phongHocLabel = new JLabel("Phòng học");
+        jFrame.add(phongHocLabel);
+        phongHocLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        final JTextField phongHocTxtField = new JTextField();
+        jFrame.add(phongHocTxtField);
+
+        JPanel jPanel = new JPanel();
+        JButton confirmBtn = new JButton("Xác nhận");
+        confirmBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    PreparedStatement stm = connection
+                            .prepareStatement(
+                                    "INSERT INTO thoi_khoa_bieu (ngay_bd, ngay_kt, thu, gio_bd, gio_kt, ten_phong_hoc, ma_mh) VALUES (?,?,?,?,?,?,?)");
+                    stm.setString(1, ngayBdTxtField.getText());
+                    stm.setString(2, ngayKtTxtField.getText());
+                    stm.setString(3, thuTxtField.getText());
+                    stm.setString(4, gioBdTxtField.getText());
+                    stm.setString(5, gioKtTxtField.getText());
+                    stm.setString(6, phongHocTxtField.getText());
+                    stm.setString(7, maMHTextField.getText());
+                    try {
+                        stm.executeUpdate();
+                        JOptionPane.showMessageDialog(jFrame, "Success!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    } catch (Exception e1) {
+                        JOptionPane.showMessageDialog(jFrame, "Failure!", "Error", JOptionPane.ERROR_MESSAGE);
+                        e1.printStackTrace();
+                    }
+                } catch (SQLException e2) {
+                    // TODO Auto-generated catch block
+                    e2.printStackTrace();
+                }
+            }
+        });
+        JButton cancelBtn = new JButton("Huỷ bỏ");
+        cancelBtn.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                jFrame.dispose();
+            }
+
+        });
+
+        jPanel.add(confirmBtn);
+        jPanel.add(cancelBtn);
+        jPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        jFrame.add(jPanel);
+
+        jFrame.setLayout(new BoxLayout(jFrame.getContentPane(), BoxLayout.Y_AXIS));
+        jFrame.pack();
+        jFrame.setVisible(true);
+    }
+
     public static void main(String[] args) {
         connection = getDBConnection();
         createMonHoc();
+        createThoiKhoaBieu();
     }
 }
