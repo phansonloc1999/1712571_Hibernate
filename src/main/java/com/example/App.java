@@ -57,6 +57,9 @@ public class App {
                     try {
                         stm.executeUpdate();
                         JOptionPane.showMessageDialog(jFrame, "Success!", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+                        jFrame.dispose();
+                        addSVToMonHoc(maMHTxtField.getText());
                     } catch (Exception e1) {
                         JOptionPane.showMessageDialog(jFrame, "Failure!", "Error", JOptionPane.ERROR_MESSAGE);
                         e1.printStackTrace();
@@ -179,7 +182,7 @@ public class App {
         jFrame.setVisible(true);
     }
 
-    public static void addSVToMonHoc() {
+    public static void addSVToMonHoc(final String maMH) {
         final JFrame jFrame = new JFrame();
 
         String[] maMHStrings = null;
@@ -199,40 +202,57 @@ public class App {
             e.printStackTrace();
         }
 
-        final JComboBox<String> maMHComboBox = new JComboBox<String>(maMHStrings);
-        maMHComboBox.addActionListener(new ActionListener() {
+        final CheckBoxList checkBoxList = new CheckBoxList();
+        try {
+            Statement stm = connection.createStatement();
+            ResultSet rs = stm.executeQuery("SELECT * FROM sinh_vien");
+
+            while (rs.next()) {
+                String mssv = String.valueOf(rs.getInt(1));
+                checkBoxList.addCheckbox(new JCheckBox(mssv));
+            }
+            jFrame.add(checkBoxList);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        JPanel jPanel = new JPanel();
+        JButton confirmBtn = new JButton("Xác nhận");
+        confirmBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
-                Statement statement;
                 try {
-
-                    statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-                            ResultSet.CONCUR_READ_ONLY);
-                    ResultSet rs = statement.executeQuery(
-                            "SELECT mssv FROM danh_sach_sv_mh WHERE ma_mh = '"
-                                    + (String) maMHComboBox.getSelectedItem() + "'");
-                    rs.last();
-                    int rowCount = rs.getRow();
-                    rs.beforeFirst();
-                    int i = 0;
-                    String mssvStrings[] = new String[rowCount];
-                    while (rs.next()) {
-                        mssvStrings[i] = String.valueOf(rs.getInt(1));
-                        i++;
+                    PreparedStatement statement = connection
+                            .prepareStatement("INSERT INTO danh_sach_sv_mh VALUES (?,?)");
+                    ListModel currentList = checkBoxList.getModel();
+                    for (int i = 0; i < currentList.getSize(); i++) {
+                        JCheckBox jCheckBox = (JCheckBox) currentList.getElementAt(i);
+                        if (jCheckBox.isSelected()) {
+                            statement.setString(1, maMH);
+                            statement.setString(2, jCheckBox.getText());
+                            statement.executeUpdate();
+                        }
                     }
-
-                    JList mssvList = new JList(mssvStrings);
-                    JScrollPane mssvScrollPane = new JScrollPane(mssvList);
-
-                    jFrame.add(mssvScrollPane);
-                    jFrame.pack();
                 } catch (SQLException e1) {
+                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
 
             }
         });
-        jFrame.add(maMHComboBox);
+        JButton cancelBtn = new JButton("Huỷ bỏ");
+        cancelBtn.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                jFrame.dispose();
+            }
+
+        });
+        jPanel.add(confirmBtn);
+        jPanel.add(cancelBtn);
+        jPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        jFrame.add(jPanel);
 
         jFrame.setLayout(new BoxLayout(jFrame.getContentPane(), BoxLayout.Y_AXIS));
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -242,8 +262,8 @@ public class App {
 
     public static void main(String[] args) {
         connection = getDBConnection();
-        // createMonHoc();
+        createMonHoc();
         // createThoiKhoaBieu();
-        addSVToMonHoc();
+        // addSVToMonHoc("CSC001");
     }
 }
