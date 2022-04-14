@@ -24,7 +24,7 @@ CREATE TABLE sinh_vien (
 
 -- DROP TABLE thoi_khoa_bieu;
 CREATE TABLE thoi_khoa_bieu (
-	mssv MEDIUMINT UNSIGNED NOT NULL,
+    id INT NOT NULL AUTO_INCREMENT,
     ngay_bd DATE NOT NULL,
     ngay_kt DATE NOT NULL,
     thu TINYINT UNSIGNED NOT NULL,
@@ -32,8 +32,7 @@ CREATE TABLE thoi_khoa_bieu (
     gio_kt TIME NOT NULL,
     ten_phong_hoc CHAR(10) NOT NULL,
     ma_mh CHAR(15) NOT NULL,
-    PRIMARY KEY (mssv, ma_mh),
-    FOREIGN KEY (mssv) REFERENCES sinh_vien(mssv),
+    PRIMARY KEY (id),
     FOREIGN KEY (ma_mh) REFERENCES mon_hoc(ma_mh)
 );
 
