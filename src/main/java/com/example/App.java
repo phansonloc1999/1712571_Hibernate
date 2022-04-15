@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
-import java.util.ArrayList;
 
 /**
  * Hello world!
@@ -234,6 +233,7 @@ public class App {
                             statement.executeUpdate();
                         }
                     }
+                    jFrame.dispose();
                 } catch (SQLException e1) {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
@@ -254,6 +254,7 @@ public class App {
         jPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         jFrame.add(jPanel);
 
+        jFrame.setTitle("Thêm sinh viên vào môn học");
         jFrame.setLayout(new BoxLayout(jFrame.getContentPane(), BoxLayout.Y_AXIS));
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jFrame.pack();
