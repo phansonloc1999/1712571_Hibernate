@@ -37,6 +37,7 @@ public class CheckBoxList extends JList {
         JCheckBox[] newList = new JCheckBox[currentList.getSize() + 1];
         for (int i = 0; i < currentList.getSize(); i++) {
             newList[i] = (JCheckBox) currentList.getElementAt(i);
+            newList[i].setAlignmentX(Component.LEFT_ALIGNMENT);
         }
         newList[newList.length - 1] = checkBox;
         setListData(newList);

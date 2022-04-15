@@ -3,7 +3,7 @@ CREATE DATABASE DiemDanh;
 CREATE USER 'sinhvien'@'%' IDENTIFIED BY 'sinhvien';
 GRANT SELECT ON DiemDanh.* TO 'sinhvien'@'%';
 CREATE USER 'giaovu'@'%' IDENTIFIED BY 'giaovu';
-GRANT ALL ON DiemDanh.* TO 'giaovu'@'%';
+GRANT ALL PRIVILEGES ON DiemDanh.* TO 'giaovu'@'%';
 
 USE DiemDanh;
 

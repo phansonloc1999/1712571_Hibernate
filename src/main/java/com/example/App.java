@@ -164,11 +164,9 @@ public class App {
         });
         JButton cancelBtn = new JButton("Huỷ bỏ");
         cancelBtn.addActionListener(new ActionListener() {
-
             public void actionPerformed(ActionEvent e) {
                 jFrame.dispose();
             }
-
         });
 
         jPanel.add(confirmBtn);
@@ -183,6 +181,7 @@ public class App {
 
     public static void addSVToMonHoc(final String maMH) {
         final JFrame jFrame = new JFrame();
+        jFrame.setSize(400, 300);
 
         String[] maMHStrings = null;
         try {
@@ -210,13 +209,42 @@ public class App {
                 String mssv = String.valueOf(rs.getInt(1));
                 checkBoxList.addCheckbox(new JCheckBox(mssv));
             }
-            jFrame.add(checkBoxList);
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        JPanel jPanel = new JPanel();
+        JPanel topPanel = new JPanel();
+        JLabel checkBoxMssvLabel = new JLabel("Chọn MSSV");
+        topPanel.add(checkBoxMssvLabel);
+        checkBoxMssvLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        topPanel.add(checkBoxList);
+        checkBoxList.setAlignmentX(Component.LEFT_ALIGNMENT);
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
+        topPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // JPanel topRightPanel = new JPanel();
+        // JLabel addMssvLabel = new JLabel("Nhập MSSV");
+        // addMssvLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        // topRightPanel.add(addMssvLabel);
+        // JTextArea addMssvArea = new JTextArea();
+        // addMssvArea.setAlignmentX(Component.LEFT_ALIGNMENT);
+        // JScrollPane addMssvScrollPane = new JScrollPane(addMssvArea,
+        // JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+        // JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        // addMssvScrollPane.setPreferredSize(new Dimension(100, 100));
+        // topRightPanel.add(addMssvScrollPane);
+        // topRightPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        // topRightPanel.setLayout(new BoxLayout(topRightPanel, BoxLayout.Y_AXIS));
+
+        // JPanel topPanel = new JPanel();
+        // topPanel.add(topLeftPanel);
+        // topPanel.add(Box.createRigidArea(new Dimension(50, 50)));
+        // topPanel.add(topRightPanel);
+        // topPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        jFrame.add(topPanel);
+
+        JPanel buttonsPanel = new JPanel();
         JButton confirmBtn = new JButton("Xác nhận");
         confirmBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -249,15 +277,24 @@ public class App {
             }
 
         });
-        jPanel.add(confirmBtn);
-        jPanel.add(cancelBtn);
-        jPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        jFrame.add(jPanel);
+
+        // buttonsPanel.add(Box.createHorizontalGlue());
+        confirmBtn.setAlignmentX(Component.BOTTOM_ALIGNMENT);
+        cancelBtn.setAlignmentX(Component.BOTTOM_ALIGNMENT);
+        buttonsPanel.add(Box.createRigidArea(new Dimension(0, 70)));
+        buttonsPanel.add(Box.createHorizontalGlue());
+        buttonsPanel.add(confirmBtn);
+        buttonsPanel.add(Box.createHorizontalGlue());
+        buttonsPanel.add(cancelBtn);
+        buttonsPanel.add(Box.createHorizontalGlue());
+        buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
+        jFrame.add(Box.createVerticalGlue());
+        jFrame.add(buttonsPanel);
 
         jFrame.setTitle("Thêm sinh viên vào môn học");
         jFrame.setLayout(new BoxLayout(jFrame.getContentPane(), BoxLayout.Y_AXIS));
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        jFrame.pack();
+        // jFrame.pack();
         jFrame.setVisible(true);
     }
 
