@@ -14,7 +14,7 @@ public class App {
 
     private static Connection getDBConnection() {
         Connection conn = null;
-        String connectionUrl = "jdbc:mysql://192.168.1.7:3306/DiemDanh";
+        String connectionUrl = "jdbc:mysql://localhost:3306/DiemDanh";
         String user = "giaovu";
         String password = "giaovu";
         try {
@@ -180,48 +180,117 @@ public class App {
     }
 
     public static void addSVToMonHoc(final String maMH) {
-        final JFrame jFrame = new JFrame();
-        jFrame.setSize(400, 300);
+        final JFrame selectMethodJFrame = new JFrame();
+        JButton checkMssvBtn = new JButton("Check chọn mssv");
+        checkMssvBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent actionEvent) {
+                selectMethodJFrame.dispose();
 
-        String[] maMHStrings = null;
-        try {
-            Statement stm = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            ResultSet rs = stm.executeQuery("SELECT ma_mh FROM mon_hoc");
-            rs.last();
-            int rowCount = rs.getRow();
-            maMHStrings = new String[rowCount];
-            int i = 0;
-            rs.beforeFirst();
-            while (rs.next()) {
-                maMHStrings[i] = rs.getString(1);
-                i++;
+                final JFrame jFrame = new JFrame();
+                jFrame.setSize(400, 300);
+        
+                String[] maMHStrings = null;
+                try {
+                    Statement stm = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                    ResultSet rs = stm.executeQuery("SELECT ma_mh FROM mon_hoc");
+                    rs.last();
+                    int rowCount = rs.getRow();
+                    maMHStrings = new String[rowCount];
+                    int i = 0;
+                    rs.beforeFirst();
+                    while (rs.next()) {
+                        maMHStrings[i] = rs.getString(1);
+                        i++;
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+        
+                final CheckBoxList checkBoxList = new CheckBoxList();
+                try {
+                    Statement stm = connection.createStatement();
+                    ResultSet rs = stm.executeQuery("SELECT * FROM sinh_vien");
+        
+                    while (rs.next()) {
+                        String mssv = String.valueOf(rs.getInt(1));
+                        checkBoxList.addCheckbox(new JCheckBox(mssv));
+                    }
+        
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+        
+                JPanel topPanel = new JPanel();
+                JLabel checkBoxMssvLabel = new JLabel("Chọn MSSV");
+                topPanel.add(checkBoxMssvLabel);
+                checkBoxMssvLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+                topPanel.add(checkBoxList);
+                checkBoxList.setAlignmentX(Component.LEFT_ALIGNMENT);
+                topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
+                topPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+                jFrame.add(topPanel);
+
+                JPanel buttonsPanel = new JPanel();
+                JButton confirmBtn = new JButton("Xác nhận");
+                confirmBtn.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent actionEvent) {
+        
+                        try {
+                            PreparedStatement statement = connection
+                                    .prepareStatement("INSERT INTO danh_sach_sv_mh VALUES (?,?)");
+                            ListModel currentList = checkBoxList.getModel();
+                            for (int i = 0; i < currentList.getSize(); i++) {
+                                JCheckBox jCheckBox = (JCheckBox) currentList.getElementAt(i);
+                                if (jCheckBox.isSelected()) {
+                                    statement.setString(1, maMH);
+                                    statement.setString(2, jCheckBox.getText());
+                                    statement.executeUpdate();
+                                }
+                            }
+                            jFrame.dispose();
+                        } catch (SQLException e1) {
+                            // TODO Auto-generated catch block
+                            e1.printStackTrace();
+                        }
+        
+                    }
+                });
+                JButton cancelBtn = new JButton("Huỷ bỏ");
+                cancelBtn.addActionListener(new ActionListener() {
+        
+                    public void actionPerformed(ActionEvent e) {
+                        jFrame.dispose();
+                    }
+        
+                });
+        
+                // buttonsPanel.add(Box.createHorizontalGlue());
+                confirmBtn.setAlignmentX(Component.BOTTOM_ALIGNMENT);
+                cancelBtn.setAlignmentX(Component.BOTTOM_ALIGNMENT);
+                buttonsPanel.add(Box.createRigidArea(new Dimension(0, 70)));
+                buttonsPanel.add(Box.createHorizontalGlue());
+                buttonsPanel.add(confirmBtn);
+                buttonsPanel.add(Box.createHorizontalGlue());
+                buttonsPanel.add(cancelBtn);
+                buttonsPanel.add(Box.createHorizontalGlue());
+                buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
+                jFrame.add(Box.createVerticalGlue());
+                jFrame.add(buttonsPanel);
+        
+                jFrame.setTitle("Thêm sinh viên vào môn học");
+                jFrame.setLayout(new BoxLayout(jFrame.getContentPane(), BoxLayout.Y_AXIS));
+                jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                jFrame.setVisible(true);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        final CheckBoxList checkBoxList = new CheckBoxList();
-        try {
-            Statement stm = connection.createStatement();
-            ResultSet rs = stm.executeQuery("SELECT * FROM sinh_vien");
-
-            while (rs.next()) {
-                String mssv = String.valueOf(rs.getInt(1));
-                checkBoxList.addCheckbox(new JCheckBox(mssv));
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        JPanel topPanel = new JPanel();
-        JLabel checkBoxMssvLabel = new JLabel("Chọn MSSV");
-        topPanel.add(checkBoxMssvLabel);
-        checkBoxMssvLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        topPanel.add(checkBoxList);
-        checkBoxList.setAlignmentX(Component.LEFT_ALIGNMENT);
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-        topPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        });
+        selectMethodJFrame.add(checkMssvBtn);
+        JButton nhapMssvBtn = new JButton("Nhập mssv");
+        selectMethodJFrame.add(nhapMssvBtn);
+        selectMethodJFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        selectMethodJFrame.setLayout(new FlowLayout(FlowLayout.LEFT));
+        selectMethodJFrame.pack();
+        selectMethodJFrame.setVisible(true);
 
         // JPanel topRightPanel = new JPanel();
         // JLabel addMssvLabel = new JLabel("Nhập MSSV");
@@ -242,60 +311,6 @@ public class App {
         // topPanel.add(Box.createRigidArea(new Dimension(50, 50)));
         // topPanel.add(topRightPanel);
         // topPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        jFrame.add(topPanel);
-
-        JPanel buttonsPanel = new JPanel();
-        JButton confirmBtn = new JButton("Xác nhận");
-        confirmBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-
-                try {
-                    PreparedStatement statement = connection
-                            .prepareStatement("INSERT INTO danh_sach_sv_mh VALUES (?,?)");
-                    ListModel currentList = checkBoxList.getModel();
-                    for (int i = 0; i < currentList.getSize(); i++) {
-                        JCheckBox jCheckBox = (JCheckBox) currentList.getElementAt(i);
-                        if (jCheckBox.isSelected()) {
-                            statement.setString(1, maMH);
-                            statement.setString(2, jCheckBox.getText());
-                            statement.executeUpdate();
-                        }
-                    }
-                    jFrame.dispose();
-                } catch (SQLException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }
-
-            }
-        });
-        JButton cancelBtn = new JButton("Huỷ bỏ");
-        cancelBtn.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                jFrame.dispose();
-            }
-
-        });
-
-        // buttonsPanel.add(Box.createHorizontalGlue());
-        confirmBtn.setAlignmentX(Component.BOTTOM_ALIGNMENT);
-        cancelBtn.setAlignmentX(Component.BOTTOM_ALIGNMENT);
-        buttonsPanel.add(Box.createRigidArea(new Dimension(0, 70)));
-        buttonsPanel.add(Box.createHorizontalGlue());
-        buttonsPanel.add(confirmBtn);
-        buttonsPanel.add(Box.createHorizontalGlue());
-        buttonsPanel.add(cancelBtn);
-        buttonsPanel.add(Box.createHorizontalGlue());
-        buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
-        jFrame.add(Box.createVerticalGlue());
-        jFrame.add(buttonsPanel);
-
-        jFrame.setTitle("Thêm sinh viên vào môn học");
-        jFrame.setLayout(new BoxLayout(jFrame.getContentPane(), BoxLayout.Y_AXIS));
-        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // jFrame.pack();
-        jFrame.setVisible(true);
     }
 
     public static void main(String[] args) {
