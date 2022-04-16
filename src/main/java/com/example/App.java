@@ -1,6 +1,7 @@
 package com.example;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
@@ -188,10 +189,11 @@ public class App {
 
                 final JFrame jFrame = new JFrame();
                 jFrame.setSize(400, 300);
-        
+
                 String[] maMHStrings = null;
                 try {
-                    Statement stm = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                    Statement stm = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+                            ResultSet.CONCUR_READ_ONLY);
                     ResultSet rs = stm.executeQuery("SELECT ma_mh FROM mon_hoc");
                     rs.last();
                     int rowCount = rs.getRow();
@@ -205,21 +207,21 @@ public class App {
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-        
+
                 final CheckBoxList checkBoxList = new CheckBoxList();
                 try {
                     Statement stm = connection.createStatement();
                     ResultSet rs = stm.executeQuery("SELECT * FROM sinh_vien");
-        
+
                     while (rs.next()) {
                         String mssv = String.valueOf(rs.getInt(1));
                         checkBoxList.addCheckbox(new JCheckBox(mssv));
                     }
-        
+
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-        
+
                 JPanel topPanel = new JPanel();
                 JLabel checkBoxMssvLabel = new JLabel("Chọn MSSV");
                 topPanel.add(checkBoxMssvLabel);
@@ -235,7 +237,7 @@ public class App {
                 JButton confirmBtn = new JButton("Xác nhận");
                 confirmBtn.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent actionEvent) {
-        
+
                         try {
                             PreparedStatement statement = connection
                                     .prepareStatement("INSERT INTO danh_sach_sv_mh VALUES (?,?)");
@@ -253,18 +255,17 @@ public class App {
                             // TODO Auto-generated catch block
                             e1.printStackTrace();
                         }
-        
+
                     }
                 });
                 JButton cancelBtn = new JButton("Huỷ bỏ");
                 cancelBtn.addActionListener(new ActionListener() {
-        
+
                     public void actionPerformed(ActionEvent e) {
                         jFrame.dispose();
                     }
-        
+
                 });
-        
                 // buttonsPanel.add(Box.createHorizontalGlue());
                 confirmBtn.setAlignmentX(Component.BOTTOM_ALIGNMENT);
                 cancelBtn.setAlignmentX(Component.BOTTOM_ALIGNMENT);
@@ -277,7 +278,7 @@ public class App {
                 buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
                 jFrame.add(Box.createVerticalGlue());
                 jFrame.add(buttonsPanel);
-        
+
                 jFrame.setTitle("Thêm sinh viên vào môn học");
                 jFrame.setLayout(new BoxLayout(jFrame.getContentPane(), BoxLayout.Y_AXIS));
                 jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -286,31 +287,64 @@ public class App {
         });
         selectMethodJFrame.add(checkMssvBtn);
         JButton nhapMssvBtn = new JButton("Nhập mssv");
+        nhapMssvBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                selectMethodJFrame.dispose();
+                final JFrame jFrame = new JFrame();
+
+                JPanel jPanel = new JPanel();
+                JLabel addMssvLabel = new JLabel("Nhập MSSV");
+                addMssvLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                jPanel.add(addMssvLabel);
+                JTextArea addMssvArea = new JTextArea();
+                addMssvArea.setAlignmentX(Component.CENTER_ALIGNMENT);
+                JScrollPane addMssvScrollPane = new JScrollPane(addMssvArea,
+                        JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                        JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+                addMssvScrollPane.setPreferredSize(new Dimension(100, 100));
+                jPanel.add(addMssvScrollPane);
+                jPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+                jPanel.setLayout(new BoxLayout(jPanel, BoxLayout.Y_AXIS));
+
+                JPanel buttonsPanel = new JPanel();
+                JButton confirmBtn = new JButton("Xác nhận");
+                confirmBtn.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent actionEvent) {
+                    }
+                });
+                JButton cancelBtn = new JButton("Huỷ bỏ");
+                cancelBtn.addActionListener(new ActionListener() {
+
+                    public void actionPerformed(ActionEvent e) {
+                        jFrame.dispose();
+                    }
+
+                });
+                confirmBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+                cancelBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+                buttonsPanel.add(Box.createRigidArea(new Dimension(0, 70)));
+                buttonsPanel.add(Box.createHorizontalGlue());
+                buttonsPanel.add(confirmBtn);
+                buttonsPanel.add(Box.createHorizontalGlue());
+                buttonsPanel.add(cancelBtn);
+                buttonsPanel.add(Box.createHorizontalGlue());
+                buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
+                
+                jFrame.add(jPanel);
+                jPanel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+                jFrame.add(buttonsPanel);
+                buttonsPanel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+                jFrame.setLayout(new BoxLayout(jFrame.getContentPane(), BoxLayout.Y_AXIS));
+                jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                jFrame.pack();
+                jFrame.setVisible(true);
+            }
+        });
         selectMethodJFrame.add(nhapMssvBtn);
         selectMethodJFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         selectMethodJFrame.setLayout(new FlowLayout(FlowLayout.LEFT));
         selectMethodJFrame.pack();
         selectMethodJFrame.setVisible(true);
-
-        // JPanel topRightPanel = new JPanel();
-        // JLabel addMssvLabel = new JLabel("Nhập MSSV");
-        // addMssvLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        // topRightPanel.add(addMssvLabel);
-        // JTextArea addMssvArea = new JTextArea();
-        // addMssvArea.setAlignmentX(Component.LEFT_ALIGNMENT);
-        // JScrollPane addMssvScrollPane = new JScrollPane(addMssvArea,
-        // JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-        // JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        // addMssvScrollPane.setPreferredSize(new Dimension(100, 100));
-        // topRightPanel.add(addMssvScrollPane);
-        // topRightPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        // topRightPanel.setLayout(new BoxLayout(topRightPanel, BoxLayout.Y_AXIS));
-
-        // JPanel topPanel = new JPanel();
-        // topPanel.add(topLeftPanel);
-        // topPanel.add(Box.createRigidArea(new Dimension(50, 50)));
-        // topPanel.add(topRightPanel);
-        // topPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
     }
 
     public static void main(String[] args) {
