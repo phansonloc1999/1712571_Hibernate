@@ -2,9 +2,13 @@ package com.example;
 
 import javax.swing.*;
 
+import com.mysql.cj.x.protobuf.MysqlxDatatypes.Scalar;
+
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
 import java.sql.*;
+import java.util.Scanner;
 
 /**
  * Hello world!
@@ -13,9 +17,11 @@ import java.sql.*;
 public class App {
     private static Connection connection = null;
 
+    private static final Dimension PREFERED_FRAME_SIZE = new Dimension(400, 300);
+
     private static Connection getDBConnection() {
         Connection conn = null;
-        String connectionUrl = "jdbc:mysql://localhost:3306/DiemDanh";
+        String connectionUrl = "jdbc:mysql://192.168.1.7:3306/DiemDanh";
         String user = "giaovu";
         String password = "giaovu";
         try {
@@ -188,7 +194,6 @@ public class App {
                 selectMethodJFrame.dispose();
 
                 final JFrame jFrame = new JFrame();
-                jFrame.setSize(400, 300);
 
                 String[] maMHStrings = null;
                 try {
@@ -266,7 +271,6 @@ public class App {
                     }
 
                 });
-                // buttonsPanel.add(Box.createHorizontalGlue());
                 confirmBtn.setAlignmentX(Component.BOTTOM_ALIGNMENT);
                 cancelBtn.setAlignmentX(Component.BOTTOM_ALIGNMENT);
                 buttonsPanel.add(Box.createRigidArea(new Dimension(0, 70)));
@@ -282,6 +286,7 @@ public class App {
                 jFrame.setTitle("Thêm sinh viên vào môn học");
                 jFrame.setLayout(new BoxLayout(jFrame.getContentPane(), BoxLayout.Y_AXIS));
                 jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                jFrame.pack();
                 jFrame.setVisible(true);
             }
         });
@@ -293,10 +298,10 @@ public class App {
                 final JFrame jFrame = new JFrame();
 
                 JPanel jPanel = new JPanel();
-                JLabel addMssvLabel = new JLabel("Nhập MSSV");
+                JLabel addMssvLabel = new JLabel("Nhập các MSSV (từng dòng 1)");
                 addMssvLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
                 jPanel.add(addMssvLabel);
-                JTextArea addMssvArea = new JTextArea();
+                final JTextArea addMssvArea = new JTextArea();
                 addMssvArea.setAlignmentX(Component.CENTER_ALIGNMENT);
                 JScrollPane addMssvScrollPane = new JScrollPane(addMssvArea,
                         JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
@@ -310,6 +315,26 @@ public class App {
                 JButton confirmBtn = new JButton("Xác nhận");
                 confirmBtn.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent actionEvent) {
+                        try {
+                            PreparedStatement statement = connection
+                                    .prepareStatement("INSERT INTO danh_sach_sv_mh VALUES (?,?)");
+
+                            String listOfMssv = addMssvArea.getText();
+                            Scanner scanner = new Scanner(listOfMssv);
+                            while (scanner.hasNextLine()) {
+                                statement.setString(1, maMH);
+                                statement.setString(2, scanner.nextLine());
+                                statement.executeUpdate();
+                            }
+                            scanner.close();
+
+                            JOptionPane.showMessageDialog(jFrame, "Success!", "Success",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                        } catch (SQLException e) {
+                            JOptionPane.showMessageDialog(jFrame, "Failed!", "Error", JOptionPane.ERROR_MESSAGE);
+                            e.printStackTrace();
+                        }
+
                     }
                 });
                 JButton cancelBtn = new JButton("Huỷ bỏ");
@@ -329,7 +354,7 @@ public class App {
                 buttonsPanel.add(cancelBtn);
                 buttonsPanel.add(Box.createHorizontalGlue());
                 buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
-                
+
                 jFrame.add(jPanel);
                 jPanel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
                 jFrame.add(buttonsPanel);
