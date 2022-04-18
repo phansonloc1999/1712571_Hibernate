@@ -1,13 +1,14 @@
 package com.example;
 
 import javax.swing.*;
-
-import com.mysql.cj.x.protobuf.MysqlxDatatypes.Scalar;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -291,6 +292,7 @@ public class App {
             }
         });
         selectMethodJFrame.add(checkMssvBtn);
+
         JButton nhapMssvBtn = new JButton("Nhập mssv");
         nhapMssvBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
@@ -366,14 +368,77 @@ public class App {
             }
         });
         selectMethodJFrame.add(nhapMssvBtn);
+
+        JButton openCSVBtn = new JButton("Load file CSV");
+        openCSVBtn.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                JFileChooser chooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                        "CSV File", "csv");
+                chooser.setFileFilter(filter);
+                int returnVal = chooser.showOpenDialog(chooser);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    try {
+                        Scanner scanner = new Scanner(new File(chooser.getSelectedFile().getAbsolutePath()));
+                        ArrayList<String> mssvFromCSV = new ArrayList<String>();
+                        while (scanner.hasNextLine()) {
+                            String line = scanner.nextLine();
+                            String[] mssvInLine = line.split(",");
+                            for (String mssv : mssvInLine) {
+                                if (!mssv.equals("")) {
+                                    mssvFromCSV.add(mssv);
+                                }
+                            }
+                        }
+
+                        PreparedStatement statement = connection
+                                .prepareStatement("INSERT INTO danh_sach_sv_mh VALUES (?,?)");
+                        for (String mssv : mssvFromCSV) {
+                            statement.setString(1, maMH);
+                            statement.setString(2, mssv);
+                            statement.executeUpdate();
+                        }
+                    } catch (FileNotFoundException | SQLException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+        });
+        selectMethodJFrame.add(openCSVBtn);
+
         selectMethodJFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         selectMethodJFrame.setLayout(new FlowLayout(FlowLayout.LEFT));
         selectMethodJFrame.pack();
         selectMethodJFrame.setVisible(true);
     }
 
+    public static String[] getMssvFromCSV() {
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "CSV File", "csv");
+        chooser.setFileFilter(filter);
+        int returnVal = chooser.showOpenDialog(chooser);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            Scanner scanner = new Scanner(chooser.getSelectedFile().getAbsolutePath());
+            ArrayList<String> mssvFromCSV = new ArrayList<String>();
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] mssvInLine = line.split(",");
+                for (String mssv : mssvInLine) {
+                    mssvFromCSV.add(mssv);
+                }
+            }
+            return ArrayCaster.objectToStringArray(mssvFromCSV.toArray());
+        }
+        return null;
+    }
+
     public static void main(String[] args) {
         connection = getDBConnection();
+
         createMonHoc();
         // createThoiKhoaBieu();
         // addSVToMonHoc("CSC001");
