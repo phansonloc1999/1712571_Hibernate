@@ -20,24 +20,6 @@ public class App {
 
     private static final Dimension PREFERED_FRAME_SIZE = new Dimension(400, 300);
 
-    private static Connection getDBConnection() {
-        Connection conn = null;
-        String connectionUrl = "jdbc:mysql://192.168.1.7:3306/DiemDanh";
-        String user = "giaovu";
-        String password = "giaovu";
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection(connectionUrl, user, password);
-            if (conn != null) {
-                System.out.println("Connected to DB!");
-            } else
-                System.out.println("Failed to connect to DB!");
-        } catch (ClassNotFoundException | SQLException exception) {
-            exception.printStackTrace();
-        }
-        return conn;
-    }
-
     private static void createMonHoc() {
         final JFrame jFrame = new JFrame();
 
@@ -415,27 +397,6 @@ public class App {
         selectMethodJFrame.setVisible(true);
     }
 
-    public static String[] getMssvFromCSV() {
-        JFileChooser chooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "CSV File", "csv");
-        chooser.setFileFilter(filter);
-        int returnVal = chooser.showOpenDialog(chooser);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            Scanner scanner = new Scanner(chooser.getSelectedFile().getAbsolutePath());
-            ArrayList<String> mssvFromCSV = new ArrayList<String>();
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                String[] mssvInLine = line.split(",");
-                for (String mssv : mssvInLine) {
-                    mssvFromCSV.add(mssv);
-                }
-            }
-            return ArrayCaster.objectToStringArray(mssvFromCSV.toArray());
-        }
-        return null;
-    }
-
     public static void showDiemDanh(final String maMH) {
         final JFrame jFrame = new JFrame();
         jFrame.setTitle("Điểm danh");
@@ -541,11 +502,11 @@ public class App {
     }
 
     public static void main(String[] args) {
-        connection = getDBConnection();
+        connection = DatabaseUtils.getDBConnection();
 
         // createMonHoc();
         // createThoiKhoaBieu();
-        // addSVToMonHoc("CSC001");
-        showDiemDanh("CSC002");
+        addSVToMonHoc("CSC001");
+        // showDiemDanh("CSC002");
     }
 }
