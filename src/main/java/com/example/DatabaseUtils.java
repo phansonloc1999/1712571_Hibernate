@@ -20,4 +20,18 @@ public abstract class DatabaseUtils {
         }
         return conn;
     }
+
+    public static void addSinhVien(Connection conn, int mssv, String tenSv, String username, String password) {
+        try {
+            PreparedStatement statement = conn.prepareStatement("INSERT INTO sinh_vien VALUES (?,?,?,?)");
+            statement.setInt(1, mssv);
+            statement.setString(2, tenSv);
+            statement.setString(3, username);
+            statement.setString(4, password);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 }

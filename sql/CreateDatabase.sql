@@ -55,3 +55,25 @@ CREATE TABLE diem_danh_sv (
     FOREIGN KEY (ma_mh) REFERENCES mon_hoc(ma_mh),
     FOREIGN KEY (mssv) REFERENCES sinh_vien(mssv)
 );
+
+DELIMITER $$
+CREATE TRIGGER after_insert_sv_to_mh
+AFTER INSERT ON danh_sach_sv_mh
+FOR EACH ROW
+BEGIN
+	INSERT INTO diem_danh_sv VALUES (NEW.ma_mh, NEW.mssv, 1, 0);
+    INSERT INTO diem_danh_sv VALUES (NEW.ma_mh, NEW.mssv, 2, 0);
+    INSERT INTO diem_danh_sv VALUES (NEW.ma_mh, NEW.mssv, 3, 0);
+    INSERT INTO diem_danh_sv VALUES (NEW.ma_mh, NEW.mssv, 4, 0);
+    INSERT INTO diem_danh_sv VALUES (NEW.ma_mh, NEW.mssv, 5, 0);
+    INSERT INTO diem_danh_sv VALUES (NEW.ma_mh, NEW.mssv, 6, 0);
+    INSERT INTO diem_danh_sv VALUES (NEW.ma_mh, NEW.mssv, 7, 0);
+    INSERT INTO diem_danh_sv VALUES (NEW.ma_mh, NEW.mssv, 8, 0);
+    INSERT INTO diem_danh_sv VALUES (NEW.ma_mh, NEW.mssv, 9, 0);
+    INSERT INTO diem_danh_sv VALUES (NEW.ma_mh, NEW.mssv, 10, 0);
+    INSERT INTO diem_danh_sv VALUES (NEW.ma_mh, NEW.mssv, 11, 0);
+    INSERT INTO diem_danh_sv VALUES (NEW.ma_mh, NEW.mssv, 12, 0);
+    INSERT INTO diem_danh_sv VALUES (NEW.ma_mh, NEW.mssv, 13, 0);
+    INSERT INTO diem_danh_sv VALUES (NEW.ma_mh, NEW.mssv, 14, 0);
+    INSERT INTO diem_danh_sv VALUES (NEW.ma_mh, NEW.mssv, 15, 0);
+END$$
