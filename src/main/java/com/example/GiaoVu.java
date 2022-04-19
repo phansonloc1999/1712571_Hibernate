@@ -12,9 +12,17 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class GiaoVu {
-    public Connection connection = null;
+    private Connection connection = null;
 
     private static final Dimension PREFERED_FRAME_SIZE = new Dimension(400, 300);
+
+    public Connection getConnection() {
+        return connection;
+    }
+
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
 
     public void createMonHoc() {
         final JFrame jFrame = new JFrame();
@@ -395,7 +403,7 @@ public class GiaoVu {
 
     public void showDiemDanh(final String maMH) {
         final JFrame jFrame = new JFrame();
-        jFrame.setTitle("Điểm danh");
+        jFrame.setTitle("Điểm danh môn học " + maMH);
 
         try {
             ResultSet rs = null;
@@ -496,4 +504,5 @@ public class GiaoVu {
             e.printStackTrace();
         }
     }
+
 }
