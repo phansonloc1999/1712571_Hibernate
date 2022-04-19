@@ -7,12 +7,8 @@ package com.example;
 public class App {
     public static void main(String[] args) {
         GiaoVu giaoVu = new GiaoVu();
-        giaoVu.connection = DatabaseUtils.getDBConnection();
-        giaoVu.createMonHoc();
-
-        // createMonHoc();
-        // createThoiKhoaBieu();
-        // addSVToMonHoc("CSC001");
-        // showDiemDanh("CSC002");
+        giaoVu.connection = DatabaseUtils.getDBConnection("giaovu", "giaovu");
+        // giaoVu.createMonHoc();
+        giaoVu.showDiemDanh("CSC002");
     }
 }
