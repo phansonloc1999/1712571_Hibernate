@@ -505,4 +505,59 @@ public class GiaoVu {
         }
     }
 
+    public void showMainMenu() {
+        final JFrame jFrame = new JFrame();
+        JButton themMonHocBtn = new JButton("Thêm môn học");
+        themMonHocBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createMonHoc();
+            }
+        });
+        jFrame.add(themMonHocBtn);
+        JButton xemDiemDanhBtn = new JButton("Xem điểm danh");
+        xemDiemDanhBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    Statement statement = connection.createStatement();
+                    ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM mon_hoc");
+                    int numOfMonHoc = 0;
+                    while (rs.next()) {
+                        numOfMonHoc = rs.getInt(1);
+                    }
+                    String[] maMonHocArr = new String[numOfMonHoc];
+                    rs = statement.executeQuery("SELECT ma_mh FROM mon_hoc");
+                    int i = 0;
+                    while (rs.next()) {
+                        maMonHocArr[i] = rs.getString(1);
+                        i++;
+                    }
+
+                    String maMH = (String) JOptionPane.showInputDialog(jFrame,
+                            "Chọn mã môn học muốn xem điểm danh",
+                            "Chọn mã môn học",
+                            JOptionPane.PLAIN_MESSAGE,
+                            null,
+                            maMonHocArr,
+                            maMonHocArr[0]);
+
+                    // If a string was returned, say so.
+                    if ((maMH != null) && (maMH.length() > 0)) {
+                        showDiemDanh(maMH);
+                    }
+
+                } catch (SQLException exception) {
+                    exception.printStackTrace();
+                }
+            }
+        });
+        jFrame.add(xemDiemDanhBtn);
+
+        jFrame.setTitle("Menu chính");
+        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jFrame.setLayout(new FlowLayout());
+        jFrame.pack();
+        jFrame.setVisible(true);
+    }
 }
