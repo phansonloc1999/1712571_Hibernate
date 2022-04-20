@@ -2,6 +2,7 @@
 CREATE DATABASE DiemDanh;
 CREATE USER 'sinhvien'@'%' IDENTIFIED BY 'sinhvien';
 GRANT SELECT ON DiemDanh.* TO 'sinhvien'@'%';
+GRANT UPDATE ON DiemDanh.diem_danh_sv TO 'sinhvien'@'%';
 CREATE USER 'giaovu'@'%' IDENTIFIED BY 'giaovu';
 GRANT ALL PRIVILEGES ON DiemDanh.* TO 'giaovu'@'%';
 
