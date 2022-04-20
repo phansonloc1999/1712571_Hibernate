@@ -59,7 +59,7 @@ public class GiaoVu {
                         JOptionPane.showMessageDialog(jFrame, "Success!", "Success", JOptionPane.INFORMATION_MESSAGE);
 
                         jFrame.dispose();
-                        addSVToMonHoc(maMHTxtField.getText());
+                        createThoiKhoaBieu(maMHTxtField.getText());
                     } catch (SQLException e1) {
                         JOptionPane.showMessageDialog(jFrame, "Failure!", "Error", JOptionPane.ERROR_MESSAGE);
                         e1.printStackTrace();
@@ -89,42 +89,36 @@ public class GiaoVu {
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    public void createThoiKhoaBieu() {
+    public void createThoiKhoaBieu(final String maMH) {
         final JFrame jFrame = new JFrame();
         jFrame.setTitle("Tạo thời khoá biểu");
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JLabel maMHLabel = new JLabel("Mã môn học");
-        jFrame.add(maMHLabel);
-        maMHLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        final JTextField maMHTextField = new JTextField();
-        jFrame.add(maMHTextField);
-
-        JLabel ngayBdLabel = new JLabel("Ngày bắt đầu");
+        JLabel ngayBdLabel = new JLabel("Ngày bắt đầu (YYYY-MM-DD)");
         jFrame.add(ngayBdLabel);
         ngayBdLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         final JTextField ngayBdTxtField = new JTextField();
         jFrame.add(ngayBdTxtField);
 
-        JLabel ngayKtLabel = new JLabel("Ngày kết thúc");
+        JLabel ngayKtLabel = new JLabel("Ngày kết thúc (YYYY-MM-DD)");
         jFrame.add(ngayKtLabel);
         ngayBdLabel.setAlignmentX(Component.TOP_ALIGNMENT);
         final JTextField ngayKtTxtField = new JTextField();
         jFrame.add(ngayKtTxtField);
 
-        JLabel thuLabel = new JLabel("Thứ trong tuần");
+        JLabel thuLabel = new JLabel("Thứ trong tuần (2 (Thứ 2) -> 8 (Chủ nhật))");
         jFrame.add(thuLabel);
         thuLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         final JTextField thuTxtField = new JTextField();
         jFrame.add(thuTxtField);
 
-        JLabel gioBdLabel = new JLabel("Giờ bắt đầu");
+        JLabel gioBdLabel = new JLabel("Giờ bắt đầu (HH:MM:SS)");
         jFrame.add(gioBdLabel);
         gioBdLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         final JTextField gioBdTxtField = new JTextField();
         jFrame.add(gioBdTxtField);
 
-        JLabel gioKtLabel = new JLabel("Giờ kết thúc");
+        JLabel gioKtLabel = new JLabel("Giờ kết thúc (HH:MM:SS)");
         jFrame.add(gioKtLabel);
         gioKtLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         final JTextField gioKtTxtField = new JTextField();
@@ -150,10 +144,12 @@ public class GiaoVu {
                     stm.setString(4, gioBdTxtField.getText());
                     stm.setString(5, gioKtTxtField.getText());
                     stm.setString(6, phongHocTxtField.getText());
-                    stm.setString(7, maMHTextField.getText());
+                    stm.setString(7, maMH);
                     try {
                         stm.executeUpdate();
                         JOptionPane.showMessageDialog(jFrame, "Success!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                        addSVToMonHoc(maMH);
+                        jFrame.dispose();
                     } catch (Exception e1) {
                         JOptionPane.showMessageDialog(jFrame, "Failure!", "Error", JOptionPane.ERROR_MESSAGE);
                         e1.printStackTrace();
