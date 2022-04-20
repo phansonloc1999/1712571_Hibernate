@@ -1,5 +1,7 @@
 package com.example;
 
+import Utils.*;
+
 /**
  * Hello world!
  *

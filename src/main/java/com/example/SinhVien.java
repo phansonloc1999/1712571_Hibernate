@@ -5,7 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class SinhVien {
+public class SinhVien implements java.io.Serializable {
     public Connection connection = null;
 
     private int mssv;
@@ -24,6 +24,11 @@ public class SinhVien {
 
     public void setConnection(Connection connection) {
         this.connection = connection;
+    }
+
+    public SinhVien() {
+        connection = null;
+        mssv = 0;
     }
 
     public SinhVien(Connection connection, int mssv) {
