@@ -3,6 +3,9 @@ package com.example;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import Utils.CheckBoxList;
+import Utils.SinhVienDAO;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -13,8 +16,14 @@ import java.util.Scanner;
 
 public class GiaoVu {
     private Connection connection = null;
+    private java.util.List<SinhVien> sinhVienList = null;
 
     private static final Dimension PREFERED_FRAME_SIZE = new Dimension(400, 300);
+
+    public GiaoVu() {
+        connection = null;
+        sinhVienList = SinhVienDAO.getSinhVienList();
+    }
 
     public Connection getConnection() {
         return connection;
@@ -204,17 +213,9 @@ public class GiaoVu {
                 }
 
                 final CheckBoxList checkBoxList = new CheckBoxList();
-                try {
-                    Statement stm = connection.createStatement();
-                    ResultSet rs = stm.executeQuery("SELECT * FROM sinh_vien");
-
-                    while (rs.next()) {
-                        String mssv = String.valueOf(rs.getInt(1));
-                        checkBoxList.addCheckbox(new JCheckBox(mssv));
-                    }
-
-                } catch (SQLException e) {
-                    e.printStackTrace();
+                for (int i = 0; i < sinhVienList.size(); i++) {
+                    String mssv = String.valueOf(sinhVienList.get(i).getMssv());
+                    checkBoxList.addCheckbox(new JCheckBox(mssv));
                 }
 
                 JPanel topPanel = new JPanel();

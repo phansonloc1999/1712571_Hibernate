@@ -1,4 +1,4 @@
-package com.example;
+package Utils;
 
 import javax.swing.*;
 import javax.swing.border.*;
