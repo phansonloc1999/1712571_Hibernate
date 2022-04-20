@@ -9,8 +9,5 @@ public class App {
         GiaoVu giaoVu = new GiaoVu();
         giaoVu.setConnection(DatabaseUtils.getDBConnection("giaovu", "giaovu"));
         giaoVu.showMainMenu();
-
-        // SinhVien sinhVien = new SinhVien(DatabaseUtils.getDBConnection("sinhvien", "sinhvien"), 1712572);
-        // sinhVien.showDiemDanh("CSC002");
     }
 }

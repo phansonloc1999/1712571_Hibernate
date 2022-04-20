@@ -46,8 +46,7 @@ public class GiaoVu {
                 try {
                     PreparedStatement stm = connection.prepareStatement("INSERT INTO mon_hoc VALUES (?,?)");
 
-                    if (maMHTxtField.getText().equals(""))
-                    {
+                    if (maMHTxtField.getText().equals("")) {
                         JOptionPane.showMessageDialog(jFrame, "Mã môn học không hợp lệ", "Error",
                                 JOptionPane.ERROR_MESSAGE);
                         return;
@@ -395,7 +394,12 @@ public class GiaoVu {
                             statement.setString(2, mssv);
                             statement.executeUpdate();
                         }
+
+                        JOptionPane.showMessageDialog(selectMethodJFrame, "Success!", "Success",
+                                JOptionPane.INFORMATION_MESSAGE);
                     } catch (FileNotFoundException | SQLException e1) {
+                        JOptionPane.showMessageDialog(selectMethodJFrame, "Failed!", "Failed",
+                                JOptionPane.ERROR_MESSAGE);
                         e1.printStackTrace();
                     }
                 }
@@ -485,10 +489,9 @@ public class GiaoVu {
                                     JOptionPane.ERROR_MESSAGE);
                             e1.printStackTrace();
                         }
-
-                        JOptionPane.showMessageDialog(jFrame, "Success!", "Success",
-                                JOptionPane.INFORMATION_MESSAGE);
                     }
+                    JOptionPane.showMessageDialog(jFrame, "Success!", "Success",
+                            JOptionPane.INFORMATION_MESSAGE);
                 }
             });
             JButton cancelBtn = new JButton("Huỷ bỏ");

@@ -1,11 +1,5 @@
 -- NOTE: Run this script with root/system admin or database administrator account
 CREATE DATABASE DiemDanh;
-CREATE USER 'sinhvien'@'%' IDENTIFIED BY 'sinhvien';
-GRANT SELECT ON DiemDanh.* TO 'sinhvien'@'%';
-GRANT UPDATE ON DiemDanh.diem_danh_sv TO 'sinhvien'@'%';
-CREATE USER 'giaovu'@'%' IDENTIFIED BY 'giaovu';
-GRANT ALL PRIVILEGES ON DiemDanh.* TO 'giaovu'@'%';
-
 USE DiemDanh;
 
 -- DROP TABLE mon_hoc;
@@ -57,7 +51,12 @@ CREATE TABLE diem_danh_sv (
     FOREIGN KEY (mssv) REFERENCES sinh_vien(mssv)
 );
 
-DELIMITER $$
+CREATE USER 'sinhvien'@'%' IDENTIFIED BY 'sinhvien';
+GRANT SELECT ON DiemDanh.* TO 'sinhvien'@'%';
+GRANT UPDATE ON DiemDanh.diem_danh_sv TO 'sinhvien'@'%';
+CREATE USER 'giaovu'@'%' IDENTIFIED BY 'giaovu';
+GRANT ALL PRIVILEGES ON DiemDanh.* TO 'giaovu'@'%';
+
 CREATE TRIGGER after_insert_sv_to_mh
 AFTER INSERT ON danh_sach_sv_mh
 FOR EACH ROW
@@ -77,4 +76,4 @@ BEGIN
     INSERT INTO diem_danh_sv VALUES (NEW.ma_mh, NEW.mssv, 13, 0);
     INSERT INTO diem_danh_sv VALUES (NEW.ma_mh, NEW.mssv, 14, 0);
     INSERT INTO diem_danh_sv VALUES (NEW.ma_mh, NEW.mssv, 15, 0);
-END$$
+END
