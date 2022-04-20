@@ -45,6 +45,14 @@ public class GiaoVu {
             public void actionPerformed(ActionEvent e) {
                 try {
                     PreparedStatement stm = connection.prepareStatement("INSERT INTO mon_hoc VALUES (?,?)");
+
+                    if (maMHTxtField.getText().equals(""))
+                    {
+                        JOptionPane.showMessageDialog(jFrame, "Mã môn học không hợp lệ", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
                     stm.setString(1, maMHTxtField.getText());
                     stm.setString(2, tenMHTxtField.getText());
                     try {
@@ -53,7 +61,7 @@ public class GiaoVu {
 
                         jFrame.dispose();
                         addSVToMonHoc(maMHTxtField.getText());
-                    } catch (Exception e1) {
+                    } catch (SQLException e1) {
                         JOptionPane.showMessageDialog(jFrame, "Failure!", "Error", JOptionPane.ERROR_MESSAGE);
                         e1.printStackTrace();
                     }
@@ -537,7 +545,7 @@ public class GiaoVu {
                     String maMH = (String) JOptionPane.showInputDialog(jFrame,
                             "Chọn mã môn học muốn xem điểm danh",
                             "Chọn mã môn học",
-                            JOptionPane.PLAIN_MESSAGE,
+                            JOptionPane.QUESTION_MESSAGE,
                             null,
                             maMonHocArr,
                             maMonHocArr[0]);
