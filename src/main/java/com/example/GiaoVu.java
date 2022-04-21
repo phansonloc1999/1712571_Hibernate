@@ -322,6 +322,7 @@ public class GiaoVu {
 
                             JOptionPane.showMessageDialog(jFrame, "Success!", "Success",
                                     JOptionPane.INFORMATION_MESSAGE);
+                            jFrame.dispose();
                         } catch (SQLException e) {
                             JOptionPane.showMessageDialog(jFrame, "Failed!", "Error", JOptionPane.ERROR_MESSAGE);
                             e.printStackTrace();
@@ -351,6 +352,7 @@ public class GiaoVu {
                 jPanel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
                 jFrame.add(buttonsPanel);
                 buttonsPanel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+                jFrame.setTitle("Nhập MSSV");
                 jFrame.setLayout(new BoxLayout(jFrame.getContentPane(), BoxLayout.Y_AXIS));
                 jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 jFrame.pack();
