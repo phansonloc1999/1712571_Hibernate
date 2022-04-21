@@ -81,7 +81,6 @@ public class SinhVien implements java.io.Serializable {
             jFrame.add(buttonsPanel);
 
             jFrame.setLayout(new BoxLayout(jFrame.getContentPane(), BoxLayout.Y_AXIS));
-            jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             jFrame.pack();
             jFrame.setVisible(true);
         } catch (SQLException e) {
@@ -205,7 +204,7 @@ public class SinhVien implements java.io.Serializable {
 
                 jFrame.setTitle("Chọn thời điểm điểm danh");
                 jFrame.setLayout(new BoxLayout(jFrame.getContentPane(), BoxLayout.Y_AXIS));
-                jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
                 jFrame.pack();
                 jFrame.setVisible(true);
             }

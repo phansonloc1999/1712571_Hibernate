@@ -95,13 +95,11 @@ public class GiaoVu {
         jFrame.setLayout(new BoxLayout(jFrame.getContentPane(), BoxLayout.Y_AXIS));
         jFrame.pack();
         jFrame.setVisible(true);
-        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     public void createThoiKhoaBieu(final String maMH) {
         final JFrame jFrame = new JFrame();
         jFrame.setTitle("Tạo thời khoá biểu");
-        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JLabel ngayBdLabel = new JLabel("Ngày bắt đầu (YYYY-MM-DD)");
         jFrame.add(ngayBdLabel);
@@ -276,7 +274,6 @@ public class GiaoVu {
 
                 jFrame.setTitle("Thêm sinh viên vào môn học");
                 jFrame.setLayout(new BoxLayout(jFrame.getContentPane(), BoxLayout.Y_AXIS));
-                jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 jFrame.pack();
                 jFrame.setVisible(true);
             }
@@ -354,7 +351,7 @@ public class GiaoVu {
                 buttonsPanel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
                 jFrame.setTitle("Nhập MSSV");
                 jFrame.setLayout(new BoxLayout(jFrame.getContentPane(), BoxLayout.Y_AXIS));
-                jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
                 jFrame.pack();
                 jFrame.setVisible(true);
             }
@@ -406,7 +403,6 @@ public class GiaoVu {
         });
         selectMethodJFrame.add(openCSVBtn);
 
-        selectMethodJFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         selectMethodJFrame.setLayout(new FlowLayout(FlowLayout.LEFT));
         selectMethodJFrame.pack();
         selectMethodJFrame.setVisible(true);
@@ -507,7 +503,7 @@ public class GiaoVu {
             jFrame.add(buttonsPanel);
 
             jFrame.setLayout(new BoxLayout(jFrame.getContentPane(), BoxLayout.Y_AXIS));
-            jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
             jFrame.pack();
             jFrame.setVisible(true);
         } catch (SQLException e) {

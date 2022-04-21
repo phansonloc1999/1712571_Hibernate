@@ -8,9 +8,9 @@ import Utils.*;
  */
 public class App {
     public static void main(String[] args) {
-        // GiaoVu giaoVu = new GiaoVu();
-        // giaoVu.setConnection(DatabaseUtils.getDBConnection("giaovu", "giaovu"));
-        // giaoVu.showMainMenu();
+        GiaoVu giaoVu = new GiaoVu();
+        giaoVu.setConnection(DatabaseUtils.getDBConnection("giaovu", "giaovu"));
+        giaoVu.showMainMenu();
 
         SinhVien sv = new SinhVien();
         sv.setConnection(DatabaseUtils.getDBConnection("sinhvien", "sinhvien"));
