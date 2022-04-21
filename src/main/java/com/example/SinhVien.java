@@ -68,46 +68,15 @@ public class SinhVien implements java.io.Serializable {
             jFrame.add(checkBoxList);
 
             JPanel buttonsPanel = new JPanel();
-            JButton confirmBtn = new JButton("Xác nhận");
-            confirmBtn.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    ListModel checkBoxListModel = checkBoxList.getModel();
-
-                    PreparedStatement stm;
-                    try {
-                        stm = connection.prepareStatement(
-                                "UPDATE diem_danh_sv SET co_mat = ? WHERE ma_mh = ? AND mssv = ? AND tuan = ?");
-
-                        for (int j = 0; j < 15; j++) {
-                            JCheckBox jCheckBox = (JCheckBox) checkBoxListModel.getElementAt(j);
-
-                            stm.setInt(1, jCheckBox.isSelected() == true ? 1 : 0);
-                            stm.setString(2, maMH);
-                            stm.setInt(3, mssv);
-                            stm.setInt(4, (j + 1));
-
-                            stm.executeUpdate();
-                        }
-                    } catch (SQLException e1) {
-                        JOptionPane.showMessageDialog(jFrame, "Failure!", "Error",
-                                JOptionPane.ERROR_MESSAGE);
-                        e1.printStackTrace();
-                    }
-
-                    JOptionPane.showMessageDialog(jFrame, "Success!", "Success",
-                            JOptionPane.INFORMATION_MESSAGE);
-                }
-            });
-            JButton cancelBtn = new JButton("Huỷ bỏ");
-            cancelBtn.addActionListener(new ActionListener() {
+            JButton exitBtn = new JButton("Thoát");
+            exitBtn.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
                     jFrame.dispose();
                 }
 
             });
-            buttonsPanel.add(confirmBtn);
-            buttonsPanel.add(cancelBtn);
+            buttonsPanel.add(exitBtn);
             buttonsPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
             jFrame.add(buttonsPanel);
 
@@ -208,6 +177,7 @@ public class SinhVien implements java.io.Serializable {
                                     int diffInWeeks = (int) (TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS)
                                             / 7);
                                     statement1.setInt(3, diffInWeeks + 1);
+                                    statement1.executeUpdate();
 
                                     JOptionPane.showMessageDialog(jFrame, "Success!",
                                             "Success",
@@ -222,6 +192,12 @@ public class SinhVien implements java.io.Serializable {
                 });
                 buttonsPanel.add(confirmBtn);
                 JButton cancelBtn = new JButton("Huỷ bỏ");
+                cancelBtn.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        jFrame.dispose();
+                    }
+                });
                 buttonsPanel.add(cancelBtn);
                 buttonsPanel.setLayout(new FlowLayout());
                 buttonsPanel.setAlignmentX(JComponent.LEFT_ALIGNMENT);
@@ -242,8 +218,41 @@ public class SinhVien implements java.io.Serializable {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-            }
+                final JFrame jFrame = new JFrame();
 
+                Statement statement;
+                try {
+                    statement = connection.createStatement();
+                    ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM danh_sach_sv_mh WHERE mssv = " + mssv);
+                    int numOfMonHoc = 0;
+                    while (rs.next()) {
+                        numOfMonHoc = rs.getInt(1);
+                    }
+                    String[] maMonHocArr = new String[numOfMonHoc];
+                    rs = statement.executeQuery("SELECT ma_mh FROM danh_sach_sv_mh WHERE mssv = " + mssv);
+                    int i = 0;
+                    while (rs.next()) {
+                        maMonHocArr[i] = rs.getString(1);
+                        i++;
+                    }
+
+                    String maMH = (String) JOptionPane.showInputDialog(jFrame,
+                            "Chọn mã môn học muốn xem điểm danh",
+                            "Chọn mã môn học",
+                            JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            maMonHocArr,
+                            maMonHocArr[0]);
+
+                    // If a string was returned, say so.
+                    if ((maMH != null) && (maMH.length() > 0)) {
+                        showDiemDanh(maMH);
+                    }
+                } catch (SQLException e1) {
+
+                    e1.printStackTrace();
+                }
+            }
         });
         jFrame.add(xemDiemDanhBtn);
 
