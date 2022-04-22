@@ -10,8 +10,13 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class GiaoVu {
@@ -364,6 +369,13 @@ public class GiaoVu {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                try {
+                    String str = getTemplateCSV();
+                    System.out.println(str);
+                } catch (IOException e2) {
+                    e2.printStackTrace();
+                }
+
                 JFileChooser chooser = new JFileChooser();
                 FileNameExtensionFilter filter = new FileNameExtensionFilter(
                         "CSV File", "csv");
@@ -565,5 +577,14 @@ public class GiaoVu {
         jFrame.setLayout(new FlowLayout());
         jFrame.pack();
         jFrame.setVisible(true);
+    }
+
+    public String getTemplateCSV() throws IOException {
+        List<String> lines = Files.readAllLines(Paths.get("resources/template.csv"), StandardCharsets.UTF_8);
+        String result = "";
+        for (int i = 0; i < lines.size(); i++) {
+            result += lines.get(i);
+        }
+        return result;
     }
 }
