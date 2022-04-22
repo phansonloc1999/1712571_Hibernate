@@ -8,9 +8,12 @@ import Utils.SinhVienDAO;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -18,6 +21,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class GiaoVu {
     private Connection connection = null;
@@ -251,7 +255,6 @@ public class GiaoVu {
                             }
                             jFrame.dispose();
                         } catch (SQLException e1) {
-                            // TODO Auto-generated catch block
                             e1.printStackTrace();
                         }
 
@@ -288,7 +291,7 @@ public class GiaoVu {
         JButton nhapMssvBtn = new JButton("Nhập mssv");
         nhapMssvBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                selectMethodJFrame.dispose();
+                // selectMethodJFrame.dispose();
                 final JFrame jFrame = new JFrame();
 
                 JPanel jPanel = new JPanel();
@@ -370,46 +373,73 @@ public class GiaoVu {
             public void actionPerformed(ActionEvent e) {
 
                 try {
-                    String str = getTemplateCSV();
-                    System.out.println(str);
-                } catch (IOException e2) {
-                    e2.printStackTrace();
-                }
+                    String templateCsvStr = getTemplateCsvContentAsString();
+                    final JFrame jFrame = new JFrame();
+                    JLabel templateDsMssvLabel = new JLabel("Template danh sách mã số sinh viên");
+                    templateDsMssvLabel.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+                    jFrame.add(templateDsMssvLabel);
 
-                JFileChooser chooser = new JFileChooser();
-                FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                        "CSV File", "csv");
-                chooser.setFileFilter(filter);
-                int returnVal = chooser.showOpenDialog(chooser);
-                if (returnVal == JFileChooser.APPROVE_OPTION) {
-                    try {
-                        Scanner scanner = new Scanner(new File(chooser.getSelectedFile().getAbsolutePath()));
-                        ArrayList<String> mssvFromCSV = new ArrayList<String>();
-                        while (scanner.hasNextLine()) {
-                            String line = scanner.nextLine();
-                            String[] mssvInLine = line.split(",");
-                            for (String mssv : mssvInLine) {
-                                if (!mssv.equals("")) {
-                                    mssvFromCSV.add(mssv);
+                    final JTextArea mssvTextArea = new JTextArea();
+                    mssvTextArea.setText(templateCsvStr);
+                    mssvTextArea.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+                    jFrame.add(mssvTextArea);
+
+                    JPanel jPanel = new JPanel();
+                    JButton confirmBtn = new JButton("Xác nhận");
+                    confirmBtn.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            try {
+                                Scanner scanner = new Scanner(mssvTextArea.getText());
+                                ArrayList<String> mssvFromCSV = new ArrayList<String>();
+                                while (scanner.hasNextLine()) {
+                                    String line = scanner.nextLine();
+                                    String[] mssvInLine = line.split(",");
+                                    for (String mssv : mssvInLine) {
+                                        if (!mssv.equals("")) {
+                                            mssvFromCSV.add(mssv);
+                                        }
+                                    }
                                 }
+
+                                PreparedStatement statement = connection
+                                        .prepareStatement("INSERT INTO danh_sach_sv_mh VALUES (?,?)");
+                                for (String mssv : mssvFromCSV) {
+                                    statement.setString(1, maMH);
+                                    statement.setString(2, mssv);
+                                    statement.executeUpdate();
+                                }
+
+                                JOptionPane.showMessageDialog(selectMethodJFrame, "Success!", "Success",
+                                        JOptionPane.INFORMATION_MESSAGE);
+                            } catch (SQLException e1) {
+                                JOptionPane.showMessageDialog(selectMethodJFrame, "Failed!", "Failed",
+                                        JOptionPane.ERROR_MESSAGE);
+                                e1.printStackTrace();
                             }
                         }
+                    });
+                    jPanel.add(confirmBtn);
+                    JButton cancelBtn = new JButton("Huỷ bỏ");
+                    cancelBtn.addActionListener(new ActionListener() {
 
-                        PreparedStatement statement = connection
-                                .prepareStatement("INSERT INTO danh_sach_sv_mh VALUES (?,?)");
-                        for (String mssv : mssvFromCSV) {
-                            statement.setString(1, maMH);
-                            statement.setString(2, mssv);
-                            statement.executeUpdate();
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            jFrame.dispose();
                         }
 
-                        JOptionPane.showMessageDialog(selectMethodJFrame, "Success!", "Success",
-                                JOptionPane.INFORMATION_MESSAGE);
-                    } catch (FileNotFoundException | SQLException e1) {
-                        JOptionPane.showMessageDialog(selectMethodJFrame, "Failed!", "Failed",
-                                JOptionPane.ERROR_MESSAGE);
-                        e1.printStackTrace();
-                    }
+                    });
+                    jPanel.add(cancelBtn);
+                    jPanel.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+                    jPanel.setLayout(new FlowLayout());
+                    jFrame.add(jPanel);
+
+                    jFrame.setLayout(new BoxLayout(jFrame.getContentPane(), BoxLayout.Y_AXIS));
+                    jFrame.setTitle("Template CSV");
+                    jFrame.pack();
+                    jFrame.setVisible(true);
+                } catch (IOException e2) {
+                    e2.printStackTrace();
                 }
             }
         });
@@ -579,12 +609,14 @@ public class GiaoVu {
         jFrame.setVisible(true);
     }
 
-    public String getTemplateCSV() throws IOException {
-        List<String> lines = Files.readAllLines(Paths.get("resources/template.csv"), StandardCharsets.UTF_8);
-        String result = "";
-        for (int i = 0; i < lines.size(); i++) {
-            result += lines.get(i);
-        }
-        return result;
+    public String getTemplateCsvContentAsString() throws IOException {
+        InputStream inStream = this.getClass()
+                .getClassLoader()
+                .getResourceAsStream("template.csv");
+        String text = new BufferedReader(
+                new InputStreamReader(inStream, StandardCharsets.UTF_8))
+                .lines()
+                .collect(Collectors.joining("\n"));
+        return text;
     }
 }
