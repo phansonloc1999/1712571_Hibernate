@@ -65,7 +65,10 @@ public class GiaoVu {
                     statement.setString(3, mssvTxtField.getText());
                     statement.setString(4, EncryptionUtils.sha1FromString(mssvTxtField.getText()));
                     statement.executeUpdate();
+
+                    JOptionPane.showMessageDialog(jFrame, "Success!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 } catch (SQLException e1) {
+                    JOptionPane.showMessageDialog(jFrame, "Failure!", "Error", JOptionPane.ERROR_MESSAGE);
                     e1.printStackTrace();
                 }
             }
