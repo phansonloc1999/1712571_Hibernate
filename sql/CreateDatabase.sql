@@ -13,7 +13,7 @@ CREATE TABLE sinh_vien (
     mssv MEDIUMINT UNSIGNED NOT NULL,
 	ten_sv VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
     username VARCHAR(30) NOT NULL,
-    password VARCHAR(30) NOT NULL DEFAULT '',
+    password VARCHAR(40) NOT NULL DEFAULT '',
     PRIMARY KEY (mssv)
 );
 
@@ -77,7 +77,3 @@ BEGIN
     INSERT INTO diem_danh_sv VALUES (NEW.ma_mh, NEW.mssv, 14, 0);
     INSERT INTO diem_danh_sv VALUES (NEW.ma_mh, NEW.mssv, 15, 0);
 END;
-
-CREATE TRIGGER after_insert_new_sv
-BEFORE INSERT ON sinh_vien
-FOR EACH ROW SET NEW.password = NEW.mssv;
