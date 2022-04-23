@@ -12,9 +12,9 @@ public class App {
         giaoVu.setConnection(DatabaseUtils.getDBConnection("giaovu", "giaovu"));
         giaoVu.showMainMenu();
 
-        SinhVien sv = new SinhVien();
-        sv.setConnection(DatabaseUtils.getDBConnection("sinhvien", "sinhvien"));
-        sv.setMssv(1712571);
-        sv.showMainMenu();
+        // SinhVien sv = new SinhVien();
+        // sv.setConnection(DatabaseUtils.getDBConnection("sinhvien", "sinhvien"));
+        // sv.setMssv(1712571);
+        // sv.showMainMenu();
     }
 }

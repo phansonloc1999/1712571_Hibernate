@@ -1,25 +1,20 @@
 package com.example;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import Utils.CheckBoxList;
+import Utils.EncryptionUtils;
 import Utils.SinhVienDAO;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
@@ -40,6 +35,58 @@ public class GiaoVu {
 
     public void setConnection(Connection connection) {
         this.connection = connection;
+    }
+
+    public void addNewSinhVien() {
+        final JFrame jFrame = new JFrame();
+
+        JLabel mssvJLabel = new JLabel("Nhập mã số sinh viên");
+        jFrame.add(mssvJLabel);
+        final JTextField mssvTxtField = new JTextField();
+        mssvTxtField.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+        jFrame.add(mssvTxtField);
+        JLabel tenSvLabel = new JLabel("Tên sinh viên");
+        jFrame.add(tenSvLabel);
+        final JTextField tenSvTxtField = new JTextField();
+        tenSvTxtField.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+        jFrame.add(tenSvTxtField);
+
+        JPanel buttonsPanel = new JPanel();
+        JButton confirmBtn = new JButton("Xác nhận");
+        confirmBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    PreparedStatement statement = connection.prepareStatement(
+                            "INSERT INTO sinh_vien (mssv, ten_sv, username, password) VALUES (?,?,?,?)");
+                    int mssv = Integer.parseInt(mssvTxtField.getText());
+                    statement.setInt(1, mssv);
+                    statement.setString(2, tenSvTxtField.getText());
+                    statement.setString(3, mssvTxtField.getText());
+                    statement.setString(4, EncryptionUtils.sha1FromString(mssvTxtField.getText()));
+                    statement.executeUpdate();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+        buttonsPanel.add(confirmBtn);
+        JButton cancelBtn = new JButton("Huỷ bỏ");
+        cancelBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jFrame.dispose();
+            }
+        });
+        buttonsPanel.add(cancelBtn);
+        buttonsPanel.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+        buttonsPanel.setLayout(new FlowLayout());
+
+        jFrame.setTitle("Thêm sinh viên mới");
+        jFrame.setLayout(new BoxLayout(jFrame.getContentPane(), BoxLayout.Y_AXIS));
+        jFrame.add(buttonsPanel);
+        jFrame.pack();
+        jFrame.setVisible(true);
     }
 
     public void createMonHoc() {
@@ -555,6 +602,16 @@ public class GiaoVu {
 
     public void showMainMenu() {
         final JFrame jFrame = new JFrame();
+
+        JButton addSinhVienBtn = new JButton("Thêm sinh viên");
+        addSinhVienBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addNewSinhVien();
+            }
+        });
+        jFrame.add(addSinhVienBtn);
+
         JButton themMonHocBtn = new JButton("Thêm môn học");
         themMonHocBtn.addActionListener(new ActionListener() {
             @Override
