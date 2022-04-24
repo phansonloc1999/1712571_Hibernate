@@ -22,8 +22,6 @@ public class GiaoVu {
     private Connection connection = null;
     private java.util.List<SinhVien> sinhVienList = null;
 
-    private static final Dimension PREFERED_FRAME_SIZE = new Dimension(400, 300);
-
     public GiaoVu() {
         connection = null;
         sinhVienList = SinhVienDAO.getSinhVienList();
