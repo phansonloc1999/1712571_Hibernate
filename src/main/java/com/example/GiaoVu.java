@@ -14,8 +14,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class GiaoVu {
@@ -199,6 +203,12 @@ public class GiaoVu {
         confirmBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
+                    if (!lastMoreThanFifteenWeeks(ngayBdTxtField.getText(), ngayKtTxtField.getText())) {
+                        JOptionPane.showMessageDialog(jFrame, "Course must last 15 weeks!", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
                     PreparedStatement stm = connection
                             .prepareStatement(
                                     "INSERT INTO thoi_khoa_bieu (ngay_bd, ngay_kt, thu, gio_bd, gio_kt, ten_phong_hoc, ma_mh) VALUES (?,?,?,?,?,?,?)");
@@ -339,7 +349,6 @@ public class GiaoVu {
         JButton nhapMssvBtn = new JButton("Nhập mssv");
         nhapMssvBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                // selectMethodJFrame.dispose();
                 final JFrame jFrame = new JFrame();
 
                 JPanel jPanel = new JPanel();
@@ -676,5 +685,20 @@ public class GiaoVu {
                 .lines()
                 .collect(Collectors.joining("\n"));
         return text;
+    }
+
+    public boolean lastMoreThanFifteenWeeks(String ngayBd, String ngayKt) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            java.util.Date ngayBdDate = dateFormat.parse(ngayBd);
+            java.util.Date ngayKtDate = dateFormat.parse(ngayKt);
+            long diffInMillies = ngayKtDate.getTime() - ngayBdDate.getTime();
+            int diffInWeeks = (int) (TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) / 7);
+            if (diffInWeeks < 15)
+                return false;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 }
