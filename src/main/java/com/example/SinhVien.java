@@ -56,10 +56,12 @@ public class SinhVien implements java.io.Serializable {
                     "SELECT co_mat FROM diem_danh_sv WHERE mssv = " + mssv + " AND ma_mh = '" + maMH + "'");
 
             final CheckBoxList checkBoxList = new CheckBoxList();
+            checkBoxList.setDisableCheckBoxes(true);
             for (int j = 0; j < 15; j++) {
                 rs.next();
                 int coMat = rs.getInt(1);
                 JCheckBox jCheckBox = new JCheckBox("Tuần " + (j + 1));
+                jCheckBox.setEnabled(false);
                 jCheckBox.setSelected(coMat == 1 ? true : false);
                 checkBoxList.addCheckbox(jCheckBox);
             }

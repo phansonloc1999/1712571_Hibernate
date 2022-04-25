@@ -15,21 +15,29 @@ public class CheckBoxList extends JList {
 
     protected static Border noFocusBorder = new EmptyBorder(1, 1, 1, 1);
 
+    private boolean disableCheckBoxes = false;
+
     public CheckBoxList() {
         setCellRenderer(new CellRenderer());
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                int index = locationToIndex(e.getPoint());
-                if (index != -1) {
-                    JCheckBox checkbox = (JCheckBox) getModel().getElementAt(index);
-                    checkbox.setSelected(!checkbox.isSelected());
-                    repaint();
+                if (disableCheckBoxes == false) {
+                    int index = locationToIndex(e.getPoint());
+                    if (index != -1) {
+                        JCheckBox checkbox = (JCheckBox) getModel().getElementAt(index);
+                        checkbox.setSelected(!checkbox.isSelected());
+                        repaint();
+                    }
                 }
             }
         });
 
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    }
+
+    public void setDisableCheckBoxes(boolean disableCheckBoxes) {
+        this.disableCheckBoxes = disableCheckBoxes;
     }
 
     public void addCheckbox(JCheckBox checkBox) {
