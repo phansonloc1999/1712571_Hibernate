@@ -262,6 +262,61 @@ public class SinhVien implements java.io.Serializable {
         jFrame.setVisible(true);
     }
 
+    public void promptChangePassword() {
+        final JFrame jFrame = new JFrame();
+        JLabel newPassLabel = new JLabel("Nhập mật khẩu mới");
+        jFrame.add(newPassLabel);
+        final JTextField newPassTxtField = new JTextField();
+        jFrame.add(newPassTxtField);
+        newPassTxtField.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+
+        JPanel buttonsPanel = new JPanel();
+        JButton confirmBtn = new JButton("Xác nhận");
+        confirmBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    Statement statement = connection.createStatement();
+                    String password = newPassTxtField.getText();
+                    if (password.equals("")) {
+                        JOptionPane.showMessageDialog(jFrame, "Password cant be empty!", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    String hashedPass = EncryptionUtils.sha1FromString(password);
+                    statement
+                            .executeUpdate(
+                                    "UPDATE sinh_vien SET password = '" + hashedPass + "' WHERE mssv = " + mssv);
+                    JOptionPane.showMessageDialog(jFrame, "Successfully changed password!", "Success",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    statement.executeUpdate("UPDATE sinh_vien SET forceChangePass = 0 WHERE mssv = " + mssv);
+                    showMainMenu();
+                    jFrame.dispose();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+        buttonsPanel.add(confirmBtn);
+        JButton cancelBtn = new JButton("Huỷ bỏ!");
+        cancelBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(1);
+            }
+        });
+        buttonsPanel.add(cancelBtn);
+        buttonsPanel.setLayout(new FlowLayout());
+        buttonsPanel.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+        jFrame.add(buttonsPanel);
+
+        jFrame.setLayout(new BoxLayout(jFrame.getContentPane(), BoxLayout.Y_AXIS));
+        jFrame.setTitle("Đổi mật khẩu");
+        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jFrame.pack();
+        jFrame.setVisible(true);
+    }
+
     public void showLogin() {
         final JFrame jFrame = new JFrame();
         JLabel usernameJLabel = new JLabel("Username");
@@ -295,8 +350,15 @@ public class SinhVien implements java.io.Serializable {
                         String hashedPassword = rs.getString(1);
                         if (hashedPassword
                                 .equals(EncryptionUtils.sha1FromString(String.valueOf(passwordField.getPassword())))) {
-                            setMssv(mssv);
-                            showMainMenu();
+                            setMssv(Integer.parseInt(usernameTxtField.getText()));
+                            statement = connection
+                                    .prepareStatement("SELECT forceChangePass FROM sinh_vien WHERE mssv = " + mssv);
+                            ResultSet rs1 = statement.executeQuery();
+                            rs1.next();
+                            if (rs1.getInt(1) == 1) {
+                                promptChangePassword();
+                            } else
+                                showMainMenu();
                             jFrame.dispose();
                         } else
                             JOptionPane.showMessageDialog(jFrame, "Wrong username, password!", "Error",

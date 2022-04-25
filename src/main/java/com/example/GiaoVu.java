@@ -56,7 +56,7 @@ public class GiaoVu {
             public void actionPerformed(ActionEvent e) {
                 try {
                     PreparedStatement statement = connection.prepareStatement(
-                            "INSERT INTO sinh_vien (mssv, ten_sv, username, password) VALUES (?,?,?,?)");
+                            "INSERT INTO sinh_vien (mssv, ten_sv, username, password, forceChangePass) VALUES (?,?,?,?,1)");
                     int mssv = Integer.parseInt(mssvTxtField.getText());
                     statement.setInt(1, mssv);
                     statement.setString(2, tenSvTxtField.getText());

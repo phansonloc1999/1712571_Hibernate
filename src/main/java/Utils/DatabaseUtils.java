@@ -1,5 +1,6 @@
 package Utils;
 
+import java.net.ConnectException;
 import java.sql.*;
 
 public abstract class DatabaseUtils {
@@ -11,10 +12,15 @@ public abstract class DatabaseUtils {
             conn = DriverManager.getConnection(connectionUrl, username, password);
             if (conn != null) {
                 System.out.println("Connected to DB!");
-            } else
+            } else {
                 System.out.println("Failed to connect to DB!");
-        } catch (ClassNotFoundException | SQLException exception) {
-            exception.printStackTrace();
+
+            }
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+            System.exit(1);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
         return conn;
     }

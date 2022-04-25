@@ -14,6 +14,7 @@ CREATE TABLE sinh_vien (
 	ten_sv VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
     username VARCHAR(30) NOT NULL,
     password VARCHAR(40) NOT NULL DEFAULT '',
+    forceChangePass BOOL NOT NULL DEFAULT 1,
     PRIMARY KEY (mssv)
 );
 
@@ -54,6 +55,7 @@ CREATE TABLE diem_danh_sv (
 CREATE USER 'sinhvien'@'%' IDENTIFIED BY 'sinhvien';
 GRANT SELECT ON DiemDanh.* TO 'sinhvien'@'%';
 GRANT UPDATE ON DiemDanh.diem_danh_sv TO 'sinhvien'@'%';
+GRANT UPDATE ON DiemDanh.sinh_vien TO 'sinhvien'@'%';
 CREATE USER 'giaovu'@'%' IDENTIFIED BY 'giaovu';
 GRANT ALL PRIVILEGES ON DiemDanh.* TO 'giaovu'@'%';
 
