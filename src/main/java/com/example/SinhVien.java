@@ -257,6 +257,79 @@ public class SinhVien implements java.io.Serializable {
         });
         jFrame.add(xemDiemDanhBtn);
 
+        JButton changePassBtn = new JButton("Đổi mật khẩu");
+        changePassBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                final JFrame jFrame = new JFrame();
+                JLabel newPassLabel = new JLabel("Nhập mật khẩu mới");
+                jFrame.add(newPassLabel);
+                final JPasswordField newPassField = new JPasswordField();
+                jFrame.add(newPassField);
+                newPassField.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+                JLabel newPassRepeatLabel = new JLabel("Nhập lại mật khẩu mới");
+                jFrame.add(newPassRepeatLabel);
+                final JPasswordField newPassRepeatField = new JPasswordField();
+                newPassRepeatField.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+                jFrame.add(newPassRepeatField);
+
+                JPanel buttonsPanel = new JPanel();
+                JButton confirmBtn = new JButton("Xác nhận");
+                confirmBtn.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        try {
+                            Statement statement = connection.createStatement();
+                            String password = String.valueOf(newPassField.getPassword());
+                            if (password.equals("")) {
+                                JOptionPane.showMessageDialog(jFrame, "Password cant be empty!", "Error",
+                                        JOptionPane.ERROR_MESSAGE);
+                                return;
+                            }
+                            String repeatPassword = String.valueOf(newPassRepeatField.getPassword());
+                            if (!password.equals(repeatPassword)) {
+                                JOptionPane.showMessageDialog(jFrame, "Password and repeat password don't match!",
+                                        "Error",
+                                        JOptionPane.ERROR_MESSAGE);
+                                return;
+                            }
+
+                            String hashedPass = EncryptionUtils.sha1FromString(password);
+                            statement
+                                    .executeUpdate(
+                                            "UPDATE sinh_vien SET password = '" + hashedPass + "' WHERE mssv = "
+                                                    + mssv);
+                            JOptionPane.showMessageDialog(jFrame, "Successfully changed password!", "Success",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                            showMainMenu();
+                            jFrame.dispose();
+                        } catch (SQLException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                });
+                buttonsPanel.add(confirmBtn);
+                JButton cancelBtn = new JButton("Huỷ bỏ!");
+                cancelBtn.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        System.exit(1);
+                    }
+                });
+                buttonsPanel.add(cancelBtn);
+                buttonsPanel.setLayout(new FlowLayout());
+                buttonsPanel.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+                jFrame.add(buttonsPanel);
+
+                jFrame.setLayout(new BoxLayout(jFrame.getContentPane(), BoxLayout.Y_AXIS));
+                jFrame.setTitle("Đổi mật khẩu");
+                jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                jFrame.pack();
+                jFrame.setVisible(true);
+            }
+        });
+        jFrame.add(changePassBtn);
+
         jFrame.setTitle("Menu chính");
         jFrame.setLayout(new FlowLayout());
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -264,7 +337,7 @@ public class SinhVien implements java.io.Serializable {
         jFrame.setVisible(true);
     }
 
-    public void promptChangePassword() {
+    public void changePassFirstLogin() {
         final JFrame jFrame = new JFrame();
         JLabel newPassLabel = new JLabel("Nhập mật khẩu mới");
         jFrame.add(newPassLabel);
@@ -370,7 +443,7 @@ public class SinhVien implements java.io.Serializable {
                             ResultSet rs1 = statement.executeQuery();
                             rs1.next();
                             if (rs1.getInt(1) == 1) {
-                                promptChangePassword();
+                                changePassFirstLogin();
                             } else
                                 showMainMenu();
                             jFrame.dispose();
