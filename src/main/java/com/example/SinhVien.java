@@ -266,9 +266,14 @@ public class SinhVien implements java.io.Serializable {
         final JFrame jFrame = new JFrame();
         JLabel newPassLabel = new JLabel("Nhập mật khẩu mới");
         jFrame.add(newPassLabel);
-        final JTextField newPassTxtField = new JTextField();
-        jFrame.add(newPassTxtField);
-        newPassTxtField.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+        final JPasswordField newPassField = new JPasswordField();
+        jFrame.add(newPassField);
+        newPassField.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+        JLabel newPassRepeatLabel = new JLabel("Nhập lại mật khẩu mới");
+        jFrame.add(newPassRepeatLabel);
+        final JPasswordField newPassRepeatField = new JPasswordField();
+        newPassRepeatField.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+        jFrame.add(newPassRepeatField);
 
         JPanel buttonsPanel = new JPanel();
         JButton confirmBtn = new JButton("Xác nhận");
@@ -277,12 +282,19 @@ public class SinhVien implements java.io.Serializable {
             public void actionPerformed(ActionEvent e) {
                 try {
                     Statement statement = connection.createStatement();
-                    String password = newPassTxtField.getText();
+                    String password = String.valueOf(newPassField.getPassword());
                     if (password.equals("")) {
                         JOptionPane.showMessageDialog(jFrame, "Password cant be empty!", "Error",
                                 JOptionPane.ERROR_MESSAGE);
                         return;
                     }
+                    String repeatPassword = String.valueOf(newPassRepeatField.getPassword());
+                    if (!password.equals(repeatPassword)) {
+                        JOptionPane.showMessageDialog(jFrame, "Password and repeat password don't match!", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
                     String hashedPass = EncryptionUtils.sha1FromString(password);
                     statement
                             .executeUpdate(
