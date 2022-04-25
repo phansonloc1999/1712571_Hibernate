@@ -35,6 +35,12 @@ public class App {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String username = usernameTxtField.getText();
+                if (username.equals("")) {
+                    JOptionPane.showMessageDialog(jFrame, "Username cant be empty!", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
                 if (username.equals("giaovu")) {
                     String password = String.valueOf(passwordField.getPassword());
                     if (password.equals("giaovu")) {
@@ -42,7 +48,9 @@ public class App {
                         gv.setConnection(DatabaseUtils.getDBConnection(GV_DB_USERNAME, GV_DB_PASSWORD));
                         gv.showMainMenu();
                         jFrame.dispose();
-                    }
+                    } else
+                        JOptionPane.showMessageDialog(jFrame, "Wrong username, password!", "Error",
+                                JOptionPane.ERROR_MESSAGE);
                 } else {
                     try {
                         SinhVien sv = new SinhVien();
@@ -71,14 +79,14 @@ public class App {
                                     sv.showMainMenu();
                                 jFrame.dispose();
                                 return;
-                            }
+                            } else
+                                JOptionPane.showMessageDialog(jFrame, "Wrong username, password!", "Error",
+                                        JOptionPane.ERROR_MESSAGE);
                         }
                     } catch (SQLException e1) {
                         e1.printStackTrace();
                     }
                 }
-                JOptionPane.showMessageDialog(jFrame, "Wrong username, password!", "Error",
-                        JOptionPane.ERROR_MESSAGE);
             }
         });
         buttonsPanel.add(confirmBtn);

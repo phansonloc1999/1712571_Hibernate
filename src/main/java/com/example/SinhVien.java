@@ -309,7 +309,7 @@ public class SinhVien implements java.io.Serializable {
                     }
                 });
                 buttonsPanel.add(confirmBtn);
-                JButton cancelBtn = new JButton("Huỷ bỏ!");
+                JButton cancelBtn = new JButton("Huỷ bỏ");
                 cancelBtn.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -385,7 +385,7 @@ public class SinhVien implements java.io.Serializable {
             }
         });
         buttonsPanel.add(confirmBtn);
-        JButton cancelBtn = new JButton("Huỷ bỏ!");
+        JButton cancelBtn = new JButton("Huỷ bỏ");
         cancelBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
