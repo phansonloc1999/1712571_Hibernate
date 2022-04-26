@@ -183,6 +183,7 @@ public class SinhVien implements java.io.Serializable {
                                     JOptionPane.showMessageDialog(jFrame, "Success!",
                                             "Success",
                                             JOptionPane.INFORMATION_MESSAGE);
+                                    break;
                                 }
                             }
                         } catch (SQLException e1) {
