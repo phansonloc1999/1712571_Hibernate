@@ -345,7 +345,7 @@ public class GiaoVu {
         });
         selectMethodJFrame.add(checkMssvBtn);
 
-        JButton nhapMssvBtn = new JButton("Nhập mssv");
+        JButton nhapMssvBtn = new JButton("Nhập danh sách từng dòng mssv");
         nhapMssvBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 final JFrame jFrame = new JFrame();
@@ -422,7 +422,7 @@ public class GiaoVu {
         });
         selectMethodJFrame.add(nhapMssvBtn);
 
-        JButton openCSVBtn = new JButton("Load file CSV");
+        JButton openCSVBtn = new JButton("Dùng template CSV");
         openCSVBtn.addActionListener(new ActionListener() {
 
             @Override
