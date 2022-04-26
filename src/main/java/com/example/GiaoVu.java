@@ -501,6 +501,7 @@ public class GiaoVu {
         });
         selectMethodJFrame.add(openCSVBtn);
 
+        selectMethodJFrame.setTitle("Thêm sinh viên vào môn học");
         selectMethodJFrame.setLayout(new FlowLayout(FlowLayout.LEFT));
         selectMethodJFrame.pack();
         selectMethodJFrame.setVisible(true);
