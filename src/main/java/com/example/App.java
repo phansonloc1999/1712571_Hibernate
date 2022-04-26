@@ -104,7 +104,7 @@ public class App {
         buttonsPanel.setLayout(new FlowLayout());
         jFrame.add(buttonsPanel);
 
-        jFrame.setTitle("Sinh viên đăng nhập");
+        jFrame.setTitle("Đăng nhập");
         jFrame.setLayout(new BoxLayout(jFrame.getContentPane(), BoxLayout.Y_AXIS));
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jFrame.pack();
